@@ -13,12 +13,12 @@ def cssMacro(
     case (Expr(sc), Expr(args)) =>
       val style = sc.s(args*)
       val fileName = Position.ofMacroExpansion.sourceFile.name
-      val className = s"${fileName.replace(".scala", "")}-${Id.of}"
+      val className = s"${fileName.replace(".scala", "")}-$Id"
 
       Expr(Css(className, style))
     case _ =>
       report.errorAndAbort(
-        "Expected a known value for StringContext and args"
+        "Expected arguments known at compile time"
       )
 
 private given ToExpr[Css] with
@@ -28,6 +28,5 @@ private given ToExpr[Css] with
 
     '{ Css($className, $styles) }
 
-private object Id:
-  def of: String =
-    java.util.UUID.randomUUID.toString.replace("-", "").substring(0, 8)
+private def Id: String =
+  java.util.UUID.randomUUID.toString.replace("-", "").substring(0, 8)
