@@ -6,9 +6,9 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 lazy val root = project
   .in(file("."))
-  .aggregate(core)
+  .aggregate(core.js, core.jvm)
 
-lazy val core = project
+lazy val core = crossProject(JVMPlatform, JSPlatform)
   .settings(
     name := "css-core",
     libraryDependencies ++= Seq(

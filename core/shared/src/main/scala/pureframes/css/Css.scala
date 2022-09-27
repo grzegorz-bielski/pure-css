@@ -1,5 +1,4 @@
 package pureframes.css
-
 final case class Css private[css] (
     className: String,
     private[css] _styles: CssThunk
