@@ -4,12 +4,11 @@ import scala.collection.mutable
 
 trait StyleSheetRenderer:
   def render: String
-
+  def name: String
 
 trait StyleSheetContext extends StyleSheetRenderer:
   def append(css: Css): Unit
   def name: String
-
 
 object StyleSheetContext:
   def create: StyleSheetContext = create(None)

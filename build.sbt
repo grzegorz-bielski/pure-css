@@ -1,3 +1,5 @@
+import org.scalajs.linker.interface.OutputPatterns
+
 ThisBuild / organization := "pureframes"
 ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := "3.2.1-RC2"
@@ -8,18 +10,20 @@ lazy val root = project
   .in(file("."))
   .aggregate(core.js, core.jvm)
 
-lazy val core = crossProject(JVMPlatform, JSPlatform)
+lazy val core = crossProject(JSPlatform, JVMPlatform)
   .settings(
     name := "css-core",
     libraryDependencies ++= Seq(
-      Munit % Test
+      "org.scalameta" %%% "munit" % "0.7.29" % Test
     ),
-    scalacOptions := Seq(
+    scalacOptions ++= Seq(
       "-Xcheck-macros",
       "-Yretain-trees"
     )
   )
-
-lazy val Munit = "org.scalameta" %% "munit" % "0.7.29"
-
-// addCommandAlias("ptest", "; plugin / publishLocal; tests / clean; tests / test")
+  .jsSettings(
+    scalaJSLinkerConfig ~= {
+      _.withModuleKind(ModuleKind.ESModule)
+        .withOutputPatterns(OutputPatterns.fromJSFile("%s.mjs"))
+    }
+  )
