@@ -28,6 +28,7 @@ def cssImpl(
           report.errorAndAbort("No given StyleSheetContext in the scope")
         )
 
+      // TODO: `append` is not needed in the browser after the renderer has run
       '{
         val css = Css($className, () => $sc.s($parsedArgs.map(_.apply)*))
         $ctx.append(css)

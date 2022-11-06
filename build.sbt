@@ -2,7 +2,7 @@ import org.scalajs.linker.interface.OutputPatterns
 
 ThisBuild / organization := "pureframes"
 ThisBuild / version := "0.1.0-SNAPSHOT"
-ThisBuild / scalaVersion := "3.2.1-RC2"
+ThisBuild / scalaVersion := "3.2.1-RC4"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -18,7 +18,7 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
     ),
     scalacOptions ++= Seq(
       "-Xcheck-macros",
-      "-Yretain-trees"
+      "-Yretain-trees" // TODO: is it still needed?
     )
   )
   .jsSettings(

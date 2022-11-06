@@ -16,7 +16,7 @@ class RenderSpec extends FunSuite:
       summon[StyleSheetContext]
     )
 
-    Render.toFiles(dir, renderers*)
+    JVMRender.toFiles(dir, renderers*)
 
     renderers
       .distinctBy(_.name)

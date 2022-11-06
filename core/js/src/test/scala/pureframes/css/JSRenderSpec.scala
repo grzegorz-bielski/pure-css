@@ -16,7 +16,7 @@ class JSRenderSpec extends FunSuite:
       summon[StyleSheetContext]
     )
 
-    Render.toFiles(dir, renderers*)
+    JSRender.toFiles(dir, renderers*)
 
     renderers
       .distinctBy(_.name)
