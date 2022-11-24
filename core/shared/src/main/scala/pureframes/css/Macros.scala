@@ -15,7 +15,7 @@ def cssImpl(
         args.map {
           case '{ $str: String } => '{ () => $str }
           case '{ $css: Css } =>
-            Select.unique(css.asTerm, "_styles").asExprOf[CssThunk]
+            Select.unique(css.asTerm, "_styles").asExprOf[Css.Thunk]
         }
       )
 
@@ -28,11 +28,8 @@ def cssImpl(
           report.errorAndAbort("No given StyleSheetContext in the scope")
         )
 
-      // TODO: `append` is not needed in the browser after the renderer has run
       '{
-        val css = Css($className, () => $sc.s($parsedArgs.map(_.apply)*))
-        $ctx.append(css)
-        css
+        Css.create($ctx, $className, () => $sc.s($parsedArgs.map(_.apply)*))
       }
 
     case _ =>

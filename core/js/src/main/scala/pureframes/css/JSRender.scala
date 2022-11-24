@@ -6,9 +6,11 @@ import pureframes.css.internals.fs
 
 object JSRender extends FileSystemRenderer:
   def toFiles(directory: String, renderers: StyleSheetRenderer*): Unit =
-    js.Promise.all(
-      renderers.map { renderer =>
-        val path = s"$directory/${renderer.name}.css"
-        fs.promises.writeFile(path, renderer.render)
-      }.toJSArray
-    )
+    if js.typeOf(js.Dynamic.global.window) == "undefined" then
+      js.dynamicImport {
+        println("Generating stylesheets")
+
+        collectStyles(directory, renderers)
+          .foreach(fs.promises.writeFile(_, _))
+      }
+    else println("Running in browser - aborting stylesheet generation")

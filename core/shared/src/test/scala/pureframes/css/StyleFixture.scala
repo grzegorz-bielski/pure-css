@@ -1,24 +1,24 @@
 package pureframes.css
 
 object StyleFixture:
-    val color = "green"
-    
-    object FixtureStylesR extends Styles:
-        val r = css"""
-            color: red;
-        """
+  val color = "green"
 
-    object FixtureStylesGB extends Styles:
-        val g = css"""
-            color: $color;
-        """
+  object FixtureStylesR extends Styled:
+    val r = css"""
+        color: red;
+    """
 
-        val b = css"""
-            color: black;
-        """
+  object FixtureStylesGB extends Styled:
+    val g = css"""
+        color: $color;
+    """
 
-    given StyleSheetContext = StyleSheetContext.create("given")
+    val b = css"""
+        color: black;
+    """
 
-    val a = css"""
+  given StyleSheetContext = StyleSheetContext.create("given")
+
+  val a = css"""
         color: tomato;
     """

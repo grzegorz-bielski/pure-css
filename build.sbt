@@ -2,7 +2,7 @@ import org.scalajs.linker.interface.OutputPatterns
 
 ThisBuild / organization := "pureframes"
 ThisBuild / version := "0.1.0-SNAPSHOT"
-ThisBuild / scalaVersion := "3.2.1-RC4"
+ThisBuild / scalaVersion := "3.2.1"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 

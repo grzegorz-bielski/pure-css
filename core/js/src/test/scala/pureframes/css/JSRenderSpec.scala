@@ -23,6 +23,7 @@ class JSRenderSpec extends FunSuite:
       .foreach { renderer =>
         exists(s"$dir/${renderer.name}")
       }
+      // TODO: assert file contents exists
   }
 
 def exists(path: String): js.Promise[Boolean] =
