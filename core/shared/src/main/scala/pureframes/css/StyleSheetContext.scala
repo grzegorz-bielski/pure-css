@@ -12,7 +12,7 @@ object StyleSheetContext:
   def create(ctxName: Option[String]): StyleSheetContext = new:
     val acc = mutable.Set.empty[Css]
 
-    def name = ctxName.getOrElse("default")
+    def name = ctxName.getOrElse("pure-css-stylesheet")
     def append(css: Css): Unit = acc.add(css)
     def render: String = acc.map { css =>
       s"${css.selector} {${css.styles}}"

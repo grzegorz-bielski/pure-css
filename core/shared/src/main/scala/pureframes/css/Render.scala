@@ -4,7 +4,6 @@ trait FileSystemRenderer:
   def toFiles(directory: String, renderers: StyleSheetRenderer*): Unit
 
   // TODO: use fs2 file API ?
-  
   protected def collectStyles(
       directory: String,
       renderers: Seq[StyleSheetRenderer]
@@ -13,7 +12,7 @@ trait FileSystemRenderer:
       .groupBy(_.name)
       .map { (name, renderers) =>
         val path = s"$directory/$name.css"
-        val collected = renderers.foldLeft("")(_ + _.render)
+        val collected = renderers.foldLeft("")(_ + _.render.filterNot(_.isWhitespace))
 
         path -> collected
       }

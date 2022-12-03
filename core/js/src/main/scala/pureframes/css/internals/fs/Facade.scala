@@ -19,10 +19,18 @@ def promises: FsPromises = js.native
 trait FsConstants extends js.Object:
   val R_OK: Double = js.native
 
+trait RmOptions extends js.Object {
+  var force: js.UndefOr[Boolean] = js.undefined
+  var recursive: js.UndefOr[Boolean] = js.undefined
+}
+
 @js.native
 trait FsPromises extends js.Object:
   def access(path: String, mode: Double = js.native): js.Promise[Unit] =
     js.native
 
   def writeFile(file: String, data: String): js.Promise[Unit] =
+    js.native
+
+  def rm(path: String, options: RmOptions = js.native): js.Promise[Unit] =
     js.native

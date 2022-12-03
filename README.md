@@ -1,6 +1,6 @@
 # pure-css
 
-Experimental CSS-in-Scala library.
+**Experimental** library for embedding CSS in Scala sources.
 
 ## Usage
 

@@ -4,18 +4,23 @@ import munit.FunSuite
 import java.nio.file.Files
 import java.nio.file.Paths
 
-import StyleFixture.{given, *}
+import StyledFixture.{given, *}
 
 class RenderSpec extends FunSuite:
+  val dir = "core/jvm/target"
+
+  val renderers = Seq(
+    FixtureStylesR,
+    FixtureStylesGB,
+    summon[StyleSheetContext]
+  )
+
+  override def beforeEach(context: BeforeEach) =
+    renderers.foreach { r =>
+      Files.deleteIfExists(Paths.get(s"${dir}/${r.name}.css"))
+    }
+
   test("renders stylesheets") {
-    val dir = "core/jvm/target"
-
-    val renderers = Seq(
-      FixtureStylesR,
-      FixtureStylesGB,
-      summon[StyleSheetContext]
-    )
-
     JVMRender.toFiles(dir, renderers*)
 
     renderers

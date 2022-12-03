@@ -1,6 +1,6 @@
 package pureframes.css
 
-object StyleFixture:
+object StyledFixture:
   val color = "green"
 
   object FixtureStylesR extends Styled:

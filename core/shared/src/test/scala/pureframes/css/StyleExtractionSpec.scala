@@ -24,8 +24,8 @@ class StyleExtractionSpec extends FunSuite:
     object TestStyles extends Styled:
       val color = "tomato"
       val styles = css"""
-              color: $color;
-          """
+          color: $color;
+      """
 
     val uses = List(
       TestStyles.styles.className,
