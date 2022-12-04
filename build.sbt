@@ -1,13 +1,18 @@
 import org.scalajs.linker.interface.OutputPatterns
 
-ThisBuild / organization := "pureframes"
-ThisBuild / version := "0.1.0-SNAPSHOT"
+ThisBuild / organization := "eu.pureframes"
 ThisBuild / scalaVersion := "3.2.1"
+ThisBuild / versionScheme := Some("early-semver")
+ThisBuild / version := "0.0.1-SNAPSHOT"
+ThisBuild / description := "Library for embedding CSS in Scala sources"
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
 lazy val root = project
   .in(file("."))
+  .settings(
+    neverPublish
+  )
   .aggregate(core.js, core.jvm)
 
 lazy val core = crossProject(JSPlatform, JVMPlatform)
@@ -19,7 +24,8 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
     scalacOptions ++= Seq(
       "-Xcheck-macros",
       "-Yretain-trees" // TODO: is it still needed?
-    )
+    ),
+    publishSettings
   )
   .jsSettings(
     scalaJSLinkerConfig ~= {
@@ -27,3 +33,24 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
         .withOutputPatterns(OutputPatterns.fromJSFile("%s.mjs"))
     }
   )
+
+lazy val publishSettings = {
+  import xerial.sbt.Sonatype._
+
+  Seq(
+    publishTo := sonatypePublishToBundle.value,
+    sonatypeCredentialHost := "s01.oss.sonatype.org",
+    publishMavenStyle := true,
+    licenses := Seq(
+      "APL2" -> url("https://www.apache.org/licenses/LICENSE-2.0.txt")
+    ),
+    sonatypeProjectHosting := Some(
+      GitHubHosting("grzegorz-bielski", "pure-css", "pesiok@gmail.com")
+    )
+  )
+}
+
+lazy val neverPublish = Seq(
+  publish / skip := true,
+  publishLocal / skip := true
+)

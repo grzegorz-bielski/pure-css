@@ -4,7 +4,7 @@ import java.util.UUID
 import scala.quoted.*
 
 def cssImpl(
-    sc: Expr[StringContext],
+    stringContext: Expr[StringContext],
     args: Expr[Seq[Arg]]
 )(using Quotes): Expr[Css] =
   import quotes.reflect.*
@@ -22,19 +22,36 @@ def cssImpl(
       val fileName = Position.ofMacroExpansion.sourceFile.name
       val className = Expr(s"${fileName.replace(".scala", "")}-$Id")
 
-      val ctx = Expr
+      val styleSheetCtx = Expr
         .summon[StyleSheetContext]
         .getOrElse(
           report.errorAndAbort("No given StyleSheetContext in the scope")
         )
 
+      val stringCtx =
+        val sc = stringContext.valueOrAbort
+
+        val modifiedParts =
+          if (sc.parts.length <= 0)
+          then sc.parts
+          else if (sc.parts.length == 1)
+            Seq("/* PURE_CSS_START */" ++ sc.parts.head ++ "/* PURE_CSS_END */")
+          else
+            ("/* PURE_CSS_START */" ++ sc.parts.head) +: sc.parts.tail.init :+ (sc.parts.last ++ "/* PURE_CSS_END */")
+
+        Expr(StringContext(modifiedParts*))
+
       '{
-        Css.create($ctx, $className, () => $sc.s($parsedArgs.map(_.apply)*))
+        Css.create(
+          $styleSheetCtx,
+          $className,
+          () => $stringCtx.s($parsedArgs.map(_.apply)*)
+        )
       }
 
     case _ =>
       report.errorAndAbort(
-        "Expected arguments known at compile time. Got: " + args.show,
+        "Got unexpected arguments: " ++ args.show,
         args
       )
 

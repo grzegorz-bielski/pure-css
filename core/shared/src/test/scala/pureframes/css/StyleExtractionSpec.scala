@@ -22,7 +22,7 @@ class StyleExtractionSpec extends FunSuite:
 
   test("returns the same css class name on different access methods") {
     object TestStyles extends Styled:
-      val color = "tomato"
+      inline val color = "tomato"
       val styles = css"""
           color: $color;
       """
@@ -41,7 +41,7 @@ class StyleExtractionSpec extends FunSuite:
 
   test("works with nested interpolation") {
     object TestStyles extends Styled:
-      val size = "12rem"
+      inline val size = "12rem"
       
       val header =
         css"""
