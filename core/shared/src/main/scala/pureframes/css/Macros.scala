@@ -35,9 +35,9 @@ def cssImpl(
           if (sc.parts.length <= 0)
           then sc.parts
           else if (sc.parts.length == 1)
-            Seq("/* PURE_CSS_START */" ++ sc.parts.head ++ "/* PURE_CSS_END */")
+            Seq(pragmaStart ++ sc.parts.head ++ pragmaEnd)
           else
-            ("/* PURE_CSS_START */" ++ sc.parts.head) +: sc.parts.tail.init :+ (sc.parts.last ++ "/* PURE_CSS_END */")
+            (pragmaStart ++ sc.parts.head) +: sc.parts.tail.init :+ (sc.parts.last ++ pragmaEnd)
 
         Expr(StringContext(modifiedParts*))
 
@@ -54,6 +54,9 @@ def cssImpl(
         "Got unexpected arguments: " ++ args.show,
         args
       )
+
+val pragmaStart = "/* PURE_CSS_START */"
+val pragmaEnd = "/* PURE_CSS_END */"
 
 private def Id: String =
   UUID.randomUUID.toString.replace("-", "").substring(0, 8)

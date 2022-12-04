@@ -30,7 +30,7 @@ class StyleExtractionSpec extends FunSuite:
     val uses = List(
       TestStyles.styles.className,
       s"${TestStyles.styles}",
-      TestStyles.styles.toString,
+      TestStyles.styles.toString
     )
 
     assert(
@@ -38,11 +38,10 @@ class StyleExtractionSpec extends FunSuite:
     )
   }
 
-
   test("works with nested interpolation") {
     object TestStyles extends Styled:
       inline val size = "12rem"
-      
+
       val header =
         css"""
           color: #3659e2;
@@ -59,8 +58,26 @@ class StyleExtractionSpec extends FunSuite:
     assert(!TestStyles.render.isEmpty)
   }
 
+  test("generates correct pragmas") {
+    given StyleSheetContext = StyleSheetContext.create
+
+    val styles = css"""
+      position: absolute;
+      bottom: 0;
+      right: 0;
+
+      button {
+          color: tomato;
+      }
+    """
+
+    val rendered = styles._styles()
+
+    assert(rendered.contains(pragmaStart))
+    assert(rendered.contains(pragmaEnd))
+  }
+
   inline def getStyles(fontSize: String): Css =
     css"""
         font-size: ${fontSize};
     """
-
