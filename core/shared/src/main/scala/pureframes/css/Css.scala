@@ -2,7 +2,7 @@ package pureframes.css
 
 final case class Css private[css] (
     className: String,
-    private[css] _styles: Css.Thunk
+    _styles: Css.Thunk
 ):
   inline def selector: String = s".$className"
   override def toString: String = className

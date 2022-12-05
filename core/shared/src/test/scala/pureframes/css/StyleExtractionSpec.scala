@@ -77,6 +77,64 @@ class StyleExtractionSpec extends FunSuite:
     assert(rendered.contains(pragmaEnd))
   }
 
+  test("func style extraction") {
+    given StyleSheetContext = StyleSheetContext.create
+
+    def rotation(direction: "up" | "left" | "right" | "down") =
+      val rotation =
+        direction match
+          case d: "up"    => "-90"
+          case d: "right" => "0"
+          case d: "down"  => "45"
+          case d: "left"  => "180"
+
+      css"""
+        transform: rotate(${rotation}deg);
+      """
+
+    val rotateLeft = rotation("left")
+    assert(rotateLeft.styles.contains("180"))
+
+    intercept[IllegalStateException] {
+      // `css` ,acro is expanded only once in the `rotation` method body
+      // but subsequent calls to `rotation` produced different styles with the same `className`
+      rotation("right")
+    }
+  }
+
+  test("inline func style extraction") {
+    given StyleSheetContext = StyleSheetContext.create
+
+    inline def rotation(direction: "up" | "left" | "right" | "down") =
+      val rotation =
+        inline direction match
+          case d: "up"    => "-90"
+          case d: "right" => "0"
+          case d: "down"  => "45"
+          case d: "left"  => "180"
+
+      css"""
+        transform: rotate(${rotation}deg);
+      """
+
+    val all = List(
+      rotation("left"),
+      rotation("right"),
+      rotation("down"),
+      rotation("up")
+    )
+
+    assert(all(0).styles.contains("180"))
+    assert(all(1).styles.contains("0"))
+    assert(all(2).styles.contains("45"))
+    assert(all(3).styles.contains("-90"))
+
+    assert(
+      // inline def expands to multiple lines, so `css` macro is expanded multiple times and produces different `className`s
+      all.distinctBy(_.className).length == all.length
+    )
+  }
+
   inline def getStyles(fontSize: String): Css =
     css"""
         font-size: ${fontSize};
