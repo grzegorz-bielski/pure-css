@@ -1,7 +1,7 @@
 import org.scalajs.linker.interface.OutputPatterns
 
 ThisBuild / organization := "eu.pureframes"
-ThisBuild / scalaVersion := "3.2.1"
+ThisBuild / scalaVersion := "3.3.0"
 ThisBuild / versionScheme := Some("early-semver")
 ThisBuild / version := "0.0.1-SNAPSHOT"
 ThisBuild / description := "Library for embedding CSS in Scala sources"
