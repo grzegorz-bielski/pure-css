@@ -1,4 +1,5 @@
 package pureframes.css
+import pureframes.css.cssImpl
 
 type Arg = Css | String
 

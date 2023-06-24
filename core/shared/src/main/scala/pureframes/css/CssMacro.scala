@@ -3,6 +3,13 @@ package pureframes.css
 import java.util.UUID
 import scala.quoted.*
 
+import fastparse.parse
+import cssparse.CssRulesParser
+import com.helger.css.reader.CSSReader
+import com.helger.css.ECSSVersion
+import scala.collection.JavaConverters.*
+import com.helger.css.reader.errorhandler.ThrowingCSSParseErrorHandler
+
 def cssImpl(
     stringContext: Expr[StringContext],
     args: Expr[Seq[Arg]]
@@ -11,6 +18,34 @@ def cssImpl(
 
   args match
     case Varargs(args) =>
+
+      def parseCss(css: String) = 
+        parse(css, CssRulesParser.declarationList(_))
+
+      // // from: https://github.com/circe/circe/blob/series/0.14.x/modules/literal/src/main/scala-3/io/circe/literal/JsonLiteralMacros.scala
+      val stringParts = stringContext match
+        case '{ StringContext($parts: _*) } => parts.valueOrAbort
+      val replacements = args.map(Replacement(stringParts, _))
+      val cssString = stringParts.zip(replacements.map(_.placeholder)).foldLeft("") {
+          case (acc, (part, placeholder)) =>
+            val qm = "\""
+            s"$acc$part$qm$placeholder$qm"
+        } + stringParts.last
+      val placeholderCssString = s".sel {$cssString}"
+
+      // // println(cssString)
+      // println(
+      //   parseCss(cssString)
+      // )
+
+      val res = CSSReader.readFromString(placeholderCssString, ECSSVersion.CSS30, ThrowingCSSParseErrorHandler())
+
+      if res == null then 
+        println("parsed: null") 
+        println(placeholderCssString)
+      else println("parsed: " + res.getAllRules().asScala.map(_.getAsCSSString()))
+
+
       val parsedArgs = Varargs(
         args.map {
           case '{ $str: String } => '{ () => $str }

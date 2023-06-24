@@ -19,6 +19,8 @@ lazy val core = crossProject(JSPlatform, JVMPlatform)
   .settings(
     name := "css-core",
     libraryDependencies ++= Seq(
+      "com.lihaoyi" %%% "cssparse" % "3.0.1",
+      "com.helger" % "ph-css" % "7.0.0",
       "org.scalameta" %%% "munit" % "0.7.29" % Test
     ),
     scalacOptions ++= Seq(
